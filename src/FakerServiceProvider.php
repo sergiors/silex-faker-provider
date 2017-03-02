@@ -19,18 +19,8 @@ class FakerServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
-        $app['faker'] = null;
+        $app['faker'] = Factory::create($app['locale']);;
         $app['faker.providers'] = [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function boot(Application $app)
-    {
-        $app['faker'] = $app->share(function ($app) {
-            return Factory::create($app['locale']);
-        });
 
         $providers = array_filter((array) $app['faker.providers'], function ($provider) {
             return class_exists($provider) && is_subclass_of($provider, 'Faker\\Provider\\Base');

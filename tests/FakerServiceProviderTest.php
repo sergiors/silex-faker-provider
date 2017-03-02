@@ -18,7 +18,7 @@ class FakerServiceProviderTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @covers ::register
-     */
+     */ 
     public function testRegisterServiceProvider()
     {
         $app = new Application();
