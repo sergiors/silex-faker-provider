@@ -19,7 +19,7 @@ class FakerServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
-        $app['faker'] = Factory::create($app['locale']);;
+        $app['faker'] = Factory::create($app['locale']);
         $app['faker.providers'] = [];
 
         $providers = array_filter((array) $app['faker.providers'], function ($provider) {

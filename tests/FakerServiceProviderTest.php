@@ -7,7 +7,6 @@ use PHPUnit_Framework_TestCase;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Faker\Provider\ro_RO\Address;
-use CompanyNameGenerator\FakerProvider;
 
 /**
  * @author Matheus Marabesi <matheus.marabesi@gmail.com>
@@ -22,9 +21,9 @@ class FakerServiceProviderTest extends PHPUnit_Framework_TestCase
     public function testRegisterServiceProvider()
     {
         $app = new Application();
-        $app->register(new FakerServiceProvider(), [
-            'locale' => 'ro_RO',
-        ]);
+        $app['locale'] = 'ro_RO';
+
+        $app->register(new FakerServiceProvider());
         $app->boot();
 
         $this->assertInstanceOf('Faker\\Generator', $app['faker']);
@@ -38,28 +37,26 @@ class FakerServiceProviderTest extends PHPUnit_Framework_TestCase
     public function testServiceProviders()
     {
         $app = new Application();
+        $app['locale'] = 'ro_RO';
+
         $app->register(new FakerServiceProvider(), [
             'faker.providers' => [
-                'CompanyNameGenerator\\FakerProvider',
+                CompanyNameGenerator\FakerProvider::class,
             ],
         ]);
+
         $app->boot();
 
         $this->assertInstanceOf('Faker\\Generator', $app['faker']);
-
-        $this->assertCount(2, $app['faker.providers']);
+        $this->assertCount(1, $app['faker.providers']);
         $this->assertContainsOnlyInstancesOf('Faker\\Provider\\Base', $app['faker']->getProviders());
-
-        $this->assertNotEmpty(array_filter($app['faker']->getProviders(), function ($provider) {
-            return $provider instanceof FakerProvider;
-        }));
-
-        $this->assertSame('http://placehold.it/50.gif', $app['faker']->imageUrl(50));
     }
 
     public function testRequest()
     {
         $app = new Application();
+        $app['locale'] = 'ro_RO';
+
         $app->register(new FakerServiceProvider());
 
         $app->get('/', function () use ($app) {
