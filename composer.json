@@ -22,7 +22,8 @@
     "require-dev": {
         "emanueleminotto/faker-placehold-it-provider": "~1.0",
         "fzaninotto/company-name-generator": "dev-master",
-        "phpunit/phpunit": "~4.4"
+        "phpunit/phpunit": "~4.4",
+        "squizlabs/php_codesniffer": "2.*"
     },
     "autoload": {
         "psr-4": {
