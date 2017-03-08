@@ -3,7 +3,6 @@
 namespace Marabesi\FakerServiceProvider;
 
 use Faker\Factory;
-use Silex\Application;
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
 
