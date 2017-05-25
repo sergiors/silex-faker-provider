@@ -3,6 +3,7 @@
 namespace Marabesi\FakerServiceProvider;
 
 use Faker\Factory;
+use Faker\Provider\Base as Faker;
 use Pimple\ServiceProviderInterface;
 use Pimple\Container;
 
@@ -18,15 +19,20 @@ class FakerServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $app)
     {
-        $app['faker'] = Factory::create($app['locale']);
+        $app['faker'] = function (Container $app) {
+            $faker = Factory::create($app['locale']);
+
+            $providers = array_filter((array) $app['faker.providers'], function ($provider) {
+                return class_exists($provider) && is_subclass_of($provider, Faker::class);
+            });
+
+            foreach ($providers as $provider) {
+                $faker->addProvider(new $provider($faker));
+            }
+
+            return $faker;
+        };
+
         $app['faker.providers'] = [];
-
-        $providers = array_filter((array) $app['faker.providers'], function ($provider) {
-            return class_exists($provider) && is_subclass_of($provider, 'Faker\\Provider\\Base');
-        });
-
-        foreach ($providers as $provider) {
-            $app['faker']->addProvider(new $provider($app['faker']));
-        }
     }
 }
